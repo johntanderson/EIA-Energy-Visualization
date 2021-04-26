@@ -1,0 +1,73 @@
+# region_ID is the Primary Key
+Region(
+  region_ID: String, 
+  region_name: String
+)
+
+# state_ID is the Primary Key, region_ID is a foreign key
+State(
+  state_ID: String, 
+  state_name: String, 
+  region_ID: String
+)
+
+# state_ID and year form a compound primary key.
+Population(
+  state_ID: String, 
+  year: Integer, 
+  population: Integer
+)
+
+# state_ID and year form a compound primary key.
+Consumption(
+  state_ID: String, 
+  year: Integer, 
+  total: Integer
+)
+
+# state_ID and year form a compound primary key.
+RenewableConsumption(
+  state_ID: String, 
+  year: Integer, 
+  solar: Integer, 
+  wind: Integer, 
+  hydro: Integer, 
+  geothermal: Integer
+)
+
+# state_ID and year form a compound primary key.
+NonRenewableConsumption(
+  state_ID: String, 
+  year: Integer, 
+  coal: Integer, 
+  petrol: Integer, 
+  natural_gas: Integer, 
+  nuclear: Integer
+)
+
+# state_ID and year form a compound primary key.
+Production(
+  state_ID: String, 
+  year: Integer, 
+  total_production: Integer
+)
+
+# state_ID and year form a compound primary key.
+RenewableProduction(
+  state_ID: String, 
+  year: Integer, 
+  solar_production: Integer, 
+  wind_production: Integer, 
+  hydro_production: Integer, 
+  geo_production: Integer
+)
+
+# state_ID and year form a compound primary key.
+NonRenewableProduction(
+  state_ID: String, 
+  year: Integer, 
+  coal_production: Integer, 
+  petrol_production: Integer, 
+  gas_production: Integer, 
+  nuclear_production: Integer
+)
