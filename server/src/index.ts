@@ -57,3 +57,15 @@ app.get('/population', query.getPopulation, (req,res)=>{
 app.get('/emission', query.getEmissions, (req,res)=>{
     res.json(res.locals.queryData);
 })
+
+app.get('/year/:table_name', query.getYears, (req,res)=>{
+    res.json(res.locals.queryData);
+});
+
+app.get('/renewable/:table_name', query.getRenewable, (req,res)=>{
+    res.json(res.locals.queryData);
+})
+
+app.get('/nonrenewable/:table_name', query.getNonRenewable, (req,res)=>{
+    res.json(res.locals.queryData);
+})

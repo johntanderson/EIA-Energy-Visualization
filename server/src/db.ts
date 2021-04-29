@@ -22,11 +22,12 @@ export default class db {
 
         try {
             conn = await this.pool.getConnection();
-            return conn.query(sql, values);
+            result = conn.query(sql, values);
         } catch (error) {
-            throw new Error(error)
+            result = [];
         } finally {
             if(conn) conn.release();
+            return result;
         }
     }
 

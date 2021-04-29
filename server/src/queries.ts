@@ -12,12 +12,14 @@ const EIA_DB = new db({
     database: env.DB
 });
 
-async function executeQuery(query: [string | QueryOptions, any]){
+async function executeQuery(query : [string | QueryOptions, any]) : Promise<any>{
+    let result;
     try {
-        return await EIA_DB.query(query)
+        result = EIA_DB.query(query);
     } catch (error) {
-        console.error(error);
-        return [];
+        result = [];
+    } finally {
+        return result;
     }
 }
 
@@ -114,6 +116,91 @@ export default {
         ];
         res.locals.queryData = await executeQuery(query);
         return next();
+    },
+    getYears: async (req : Request, res : Response, next : NextFunction) => {
+        let sql = "SELECT DISTINCT year"
+        if(req.params.table_name.toLowerCase() === "population"){
+            sql = sql.concat(" FROM Population")
+        }
+        else if(req.params.table_name.toLowerCase() === "consumption"){
+            sql = sql.concat(" FROM Consumption")
+        }
+        else if(req.params.table_name.toLowerCase() === "production"){
+            sql = sql.concat(" FROM Production")
+        }
+        else if(req.params.table_name.toLowerCase() === "emission"){
+            sql = sql.concat(" FROM Emission")
+        } 
+        else if (req.params.table_name.toLowerCase() === "renewable_consumption"){
+            sql = sql.concat(" FROM Renewable_Consumption")
+        }
+        else if (req.params.table_name.toLowerCase() === "renewable_production"){
+            sql = sql.concat(" FROM Renewable_Production")
+        }
+        else if (req.params.table_name.toLowerCase() === "non_renewable_consumption"){
+            sql = sql.concat(" FROM Non_Renewable_Consumption")
+        }
+        else if (req.params.table_name.toLowerCase() === "non_renewable_production"){
+            sql = sql.concat(" FROM Non_Renewable_Production")
+        }
+        else {
+            res.locals.queryData = [];
+            return next();
+        }
+        let query : [string | QueryOptions, any] = [
+            {namedPlaceholders: true, sql: sql, rowsAsArray:true},
+            {table_name: req.params.table_name}
+        ];
+        res.locals.queryData = await executeQuery(query);
+        return next();
+        
+    },
+    getRenewable: async (req : Request, res : Response, next : NextFunction) => {
+        let sql = "SELECT *"
+        if(req.params.table_name.toLowerCase() === "consumption"){
+            sql = sql.concat(" FROM Renewable_Consumption WHERE 1=1")
+        }
+        else if (req.params.table_name.toLowerCase() === "production"){
+            sql = sql.concat(" FROM Renewable_Production WHERE 1=1")
+        } else {
+            res.locals.queryData = [];
+            return next();
+        }
+        if(req.query.state_id){
+            sql = sql.concat(" AND state_id=:state_id")
+        }
+        if(req.query.year){
+            sql = sql.concat(" AND year=:year")
+        }
+        let query : [string | QueryOptions, any] = [
+            {namedPlaceholders: true, sql: sql},
+            {state_id: req.query.state_id, year: req.query.year}
+        ];
+        res.locals.queryData = await executeQuery(query);
+        return next();
+    },
+    getNonRenewable: async (req : Request, res : Response, next : NextFunction) => {
+        let sql = "SELECT *"
+        if(req.params.table_name.toLowerCase() === "consumption"){
+            sql = sql.concat(" FROM Non_Renewable_Consumption WHERE 1=1")
+        }
+        else if (req.params.table_name.toLowerCase() === "production"){
+            sql = sql.concat(" FROM Non_Renewable_Production WHERE 1=1")
+        } else {
+            res.locals.queryData = [];
+            return next();
+        }
+        if(req.query.state_id){
+            sql = sql.concat(" AND state_id=:state_id")
+        }
+        if(req.query.year){
+            sql = sql.concat(" AND year=:year")
+        }
+        let query : [string | QueryOptions, any] = [
+            {namedPlaceholders: true, sql: sql},
+            {state_id: req.query.state_id, year: req.query.year}
+        ];
+        res.locals.queryData = await executeQuery(query);
+        return next();
     }
-
 }
