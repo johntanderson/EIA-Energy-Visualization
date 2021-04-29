@@ -4,16 +4,18 @@ import query from './queries';
 import { endAll } from './db';
 
 const app : Application = express();
+app.use(cors());
+app.options('*', cors());
 const server = app.listen(process.env.SERVER_PORT,()=>{console.log(`Server running at http://localhost:${process.env.SERVER_PORT}`)});
 let shutting_down = false;
+
+
 
 app.use(function(req,res,next){
     if(!shutting_down) return next();
     res.setHeader('Connection',"close");
     res.status(503).json({error: "Server is in the process of restarting"});
 })
-
-app.use(cors());
 
 function cleanup () {
     shutting_down = true;
