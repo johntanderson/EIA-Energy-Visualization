@@ -4,11 +4,11 @@
   "description": "API Server and front-end for EIA Energy DB",
   "main": "index.js",
   "scripts": {
-    "start": "pm2 start ./server/dist/index.js",
-    "dev": "nodemon --watch './**/*.ts' --exec 'ts-node' ./server/src/index.ts",
+    "start": "pm2 start ./dist/index.js",
+    "dev": "nodemon --watch './**/*.ts' --exec 'ts-node' ./src/index.ts",
     "build": "tsc",
-    "stop": "pm2 stop ./server/dist/index.js",
-    "restart": "pm2 restart ./server/dist/index.js",
+    "stop": "pm2 stop ./dist/index.js",
+    "restart": "pm2 restart ./dist/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Jed Pulley, Jt Anderson, Sam Reilly",
