@@ -1,3 +1,4 @@
+import env from './env';
 import express, { Application, Response } from 'express';
 import cors from 'cors';
 import query from './queries';
@@ -5,7 +6,7 @@ import { endAll } from './db';
 
 const app : Application = express();
 app.use(cors());
-const server = app.listen(process.env.SERVER_PORT,()=>{console.log(`Server running at http://localhost:${process.env.SERVER_PORT}`)});
+const server = app.listen(env.SERVER_PORT,()=>{console.log(`Server running at http://localhost:${env.SERVER_PORT}`)});
 let shutting_down = false;
 
 

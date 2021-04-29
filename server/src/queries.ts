@@ -1,14 +1,15 @@
+import env from './env';
 import {Request, Response, NextFunction} from 'express';
 import { QueryConfig, QueryOptions } from 'mariadb';
 import { getNameOfJSDocTypedef } from 'typescript';
 import db from './db';
 
 const EIA_DB = new db({
-    host: process.env.DB_HOST || "localhost",
-    port: parseInt(process.env.DB_PORT as string) || 3360,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASS,
-    database: process.env.DB
+    host: env.DB_HOST || "localhost",
+    port: parseInt(env.DB_PORT as string) || 3360,
+    user: env.DB_USER,
+    password: env.DB_PASS,
+    database: env.DB
 });
 
 async function executeQuery(query: [string | QueryOptions, any]){
