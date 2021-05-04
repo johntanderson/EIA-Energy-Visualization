@@ -264,5 +264,58 @@ export default {
         ];
         res.locals.queryData = await executeQuery(query);
         return next();
+    },
+    getAll: async (req : Request, res : Response, next : NextFunction) => {
+        let sql;
+        let table_name : string;
+        if(!req.query.type){
+            res.locals.queryData = [];
+            return next();
+        }
+        table_name = req.query.type.toString().toLowerCase();
+        if(req.query.fuelType){
+            req.query.sector = req.query.fuelType.toString().toLowerCase();
+        }
+        if(table_name === "consumption"){
+            if(req.query.sector){
+                let sector = req.query.sector.toString();
+                if(!allConsumptionSectors.includes(sector)){
+                    res.locals.queryData = [];
+                    return next();
+                }
+                sql = `SELECT state_id, year, ${sector} AS data`
+            } else {
+                sql = "SELECT *"
+            }
+            sql = sql.concat(" FROM Consumption WHERE 1=1")
+        }
+        else if(table_name === "production"){
+            if(req.query.sector){
+                let sector = req.query.sector.toString();
+                if(!allProductionSectors.includes(sector)){
+                    res.locals.queryData = [];
+                    return next();
+                }
+                sql = `SELECT state_id, year, ${sector} AS data`
+            } else {
+                sql = "SELECT *"
+            }
+            sql = sql.concat(" FROM Production WHERE 1=1")
+        } else {
+            res.locals.queryData = [];
+            return next();
+        }
+        if(req.query.state_id){
+            sql = sql.concat(" AND state_id=:state_id")
+        }
+        if(req.query.year){
+            sql = sql.concat(" AND year=:year")
+        }
+        let query : [string | QueryOptions, any] = [
+            {namedPlaceholders: true, sql: sql},
+            {state_id: req.query.state_id, year: req.query.year}
+        ];
+        res.locals.queryData = await executeQuery(query);
+        return next();
     }
 }
